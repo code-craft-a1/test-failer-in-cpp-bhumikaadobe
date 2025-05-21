@@ -1,6 +1,7 @@
 #include <string>
 #include <iostream>
 #include <assert.h>
+#include <gtest/gtest.h>
 
 using namespace std;
 
@@ -95,7 +96,7 @@ namespace WeatherSpace
     {
         HighPrecipitationStub sensor;
         string report = Report(sensor);
-        cout << "Report: High Precipitation and Low Wind: " << report << endl;
+        cout << "Report: High Precipitation and Low Wind: "<< report << endl;
         EXPECT_NE(report.find("rain") , string::npos) << "'rain' Expected in report,rather received " << report;
     }
 }
