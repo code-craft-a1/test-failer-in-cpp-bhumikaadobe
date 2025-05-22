@@ -1,6 +1,7 @@
 #include <string>
 #include <iostream>
 #include <assert.h>
+#include <gtest/gtest.h>
 
 using namespace std;
 
@@ -36,6 +37,25 @@ namespace WeatherSpace
             return 52;
         }
     };
+
+    class HighPrecipitationStub : public IWeatherSensor {
+        int Humidity() const override {
+            return 90;
+        }
+
+        int Precipitation() const override {
+            return 80; //high precipitation
+        }
+
+        double TemperatureInC() const override {
+            return 30; // hot
+        }
+
+        int WindSpeedKMPH() const override { 
+            return 45; 
+        }    // low wind speed <= 50
+    };
+
     string Report(const IWeatherSensor& sensor)
     {
         int precipitation = sensor.Precipitation();
@@ -71,11 +91,20 @@ namespace WeatherSpace
         string report = Report(sensor);
         assert(report.length() > 0);
     }
+
+    void TestHighPrecipitationLowWind()
+    {
+        HighPrecipitationStub sensor;
+        string report = Report(sensor);
+        cout << "Report: High Precipitation and Low Wind: "<< report << endl;
+        EXPECT_NE(report.find("rain") , string::npos) << "'rain' Expected in report,rather received " << report;
+    }
 }
 
 void testWeatherReport() {
     cout << "\nWeather report test\n";
     WeatherSpace::TestRainy();
     WeatherSpace::TestHighPrecipitation();
+    WeatherSpace::TestHighPrecipitationLowWind()
     cout << "All is well (maybe)\n";
 }
